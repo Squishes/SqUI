@@ -1,0 +1,4 @@
+SqUI
+====
+
+WildStar UI revamp
