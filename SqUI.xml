@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Sprites>
+    <Sprite Name="HP_Bar" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\HP_Bar.tga" x0="0" x1="0" x2="0" x3="1" x4="16" x5="30" y0="0" y1="0" y2="0" y3="1" y4="14" y5="15" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="HealthFill" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\HP_BarFill.tga" x0="0" x1="0" x2="0" x3="0" x4="15" x5="27" y0="0" y1="0" y2="0" y3="0" y4="13" y5="13" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="Power_Bar" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Power_Bar.tga" x0="0" x1="0" x2="0" x3="1" x4="16" x5="30" y0="0" y1="0" y2="0" y3="1" y4="14" y5="15" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="Shield_Bar" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Shield_Bar.tga" x0="0" x1="0" x2="0" x3="0" x4="0" x5="50" y0="0" y1="0" y2="0" y3="25" y4="75" y5="100" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="ShieldFill" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Shield_BarFill.tga" x0="1" x1="1" x2="1" x3="1" x4="1" x5="49" y0="1" y1="1" y2="1" y3="25" y4="75" y5="99" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="PowerFill" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Power_BarFill.tga" x0="0" x1="0" x2="0" x3="0" x4="15" x5="27" y0="0" y1="0" y2="0" y3="0" y4="13" y5="13" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="TopCluster" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Top_Cluster.tga" x0="0" x1="0" x2="0" x3="44" x4="49" x5="50" y0="0" y1="0" y2="0" y3="0" y4="0" y5="30" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="ClusterFill" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\ClusterFill.tga" x0="0" x1="0" x2="0" x3="23" x4="28" x5="28" y0="0" y1="0" y2="0" y3="0" y4="0" y5="24" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="BottomCluster" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Bottom_Cluster.tga" x0="0" x1="0" x2="0" x3="29" x4="34" x5="35" y0="0" y1="0" y2="0" y3="0" y4="0" y5="30" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="GroupMarker" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\GroupMarker.tga" x0="0" x1="0" x2="0" x3="0" x4="32" x5="32" y0="0" y1="0" y2="0" y3="0" y4="32" y5="32" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="BottomClusterFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Bottom_Cluster_Flip.tga" x0="0" x1="0" x2="0" x3="1" x4="6" x5="35" y0="0" y1="0" y2="0" y3="0" y4="0" y5="30" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="ClusterFillFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\ClusterFill_Flip.tga" x0="0" x1="0" x2="0" x3="0" x4="5" x5="28" y0="0" y1="0" y2="0" y3="0" y4="0" y5="24" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="HP_BarFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\HP_Bar_Flip.tga" x0="0" x1="0" x2="0" x3="14" x4="29" x5="30" y0="0" y1="0" y2="0" y3="1" y4="14" y5="15" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="HealthFillFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\HP_BarFill_Flip.tga" x0="0" x1="0" x2="0" x3="12" x4="27" x5="27" y0="0" y1="0" y2="0" y3="0" y4="13" y5="13" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="Power_BarFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Power_Bar_Flip.tga" x0="0" x1="0" x2="0" x3="14" x4="29" x5="30" y0="0" y1="0" y2="0" y3="1" y4="14" y5="15" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="PowerFillFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Power_BarFill_Flip.tga" x0="0" x1="0" x2="0" x3="12" x4="27" x5="27" y0="0" y1="0" y2="0" y3="0" y4="13" y5="13" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="ShieldFillFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Shield_BarFill_Flip.tga" x0="0" x1="0" x2="0" x3="0" x4="0" x5="50" y0="0" y1="0" y2="0" y3="25" y4="75" y5="100" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="TopClusterFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Top_ClusterFlip.tga" x0="0" x1="0" x2="0" x3="1" x4="6" x5="50" y0="0" y1="0" y2="0" y3="0" y4="0" y5="30" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="Shield_BarFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\Shield_Bar_Flip.tga" x0="0" x1="0" x2="0" x3="0" x4="0" x5="50" y0="0" y1="0" y2="0" y3="25" y4="75" y5="100" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="GroupMarkerFlip" Cycle="1">
+        <Frame Texture="SqUI_TargetFrame\Media\GroupMarkerFlip.tga" x0="0" x1="0" x2="0" x3="1" x4="30" x5="32" y0="0" y1="0" y2="0" y3="1" y4="30" y5="32" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+</Sprites>
