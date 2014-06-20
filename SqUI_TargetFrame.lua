@@ -13,7 +13,7 @@ require "P2PTrading"
 -----------------------------------------------------------------------------------------------
 -- SquishyUI Module Definition
 -----------------------------------------------------------------------------------------------
-local SqUI_TF = {}	--Target Frame
+local SqUI_TargetFrame = {}	--Target Frame
 local SqUI_UF = {}	--Player Frame
  
 -----------------------------------------------------------------------------------------------
@@ -25,9 +25,9 @@ local knIconicArchetype                = 23
 local knFrameWidthMax                  = 400
 local knFrameWidthShield               = 372
 local knFrameWidthMin                  = 340
-local knClusterFrameWidth              = 250 -- MUST MATCH XML
-local knClusterFrameHeight             = 200 -- MUST MATCH XML
-local knClusterFrameVertOffset         = 100 -- how far down to move the cluster members
+--local knClusterFrameWidth              = 302 -- MUST MATCH XML
+--local knClusterFrameHeight             = 200 -- MUST MATCH XML
+--local knClusterFrameVertOffset         = 100 -- how far down to move the cluster members
 local knHealthRed                      = 0.3
 local knHealthYellow                   = 0.5
 local knWindowStayOnScreenWidthOffset  = 200
@@ -122,12 +122,12 @@ local ktRankDescriptions =
 
 local karClassToIcon =
 {
-  [GameLib.CodeEnumClass.Warrior]       = "VikingTargetSprites:ClassWarrior",
-  [GameLib.CodeEnumClass.Engineer]      = "VikingTargetSprites:ClassEngineer",
-  [GameLib.CodeEnumClass.Esper]         = "VikingTargetSprites:ClassEsper",
-  [GameLib.CodeEnumClass.Medic]         = "VikingTargetSprites:ClassMedic",
-  [GameLib.CodeEnumClass.Stalker]       = "VikingTargetSprites:ClassStalker",
-  [GameLib.CodeEnumClass.Spellslinger]  = "VikingTargetSprites:ClassSpellslinger",
+	[GameLib.CodeEnumClass.Warrior] 		= "IconSprites:Icon_Windows_UI_CRB_Warrior",
+	[GameLib.CodeEnumClass.Engineer] 		= "IconSprites:Icon_Windows_UI_CRB_Engineer",
+	[GameLib.CodeEnumClass.Esper] 			= "IconSprites:Icon_Windows_UI_CRB_Esper",
+	[GameLib.CodeEnumClass.Medic] 			= "IconSprites:Icon_Windows_UI_CRB_Medic",
+	[GameLib.CodeEnumClass.Stalker] 		= "IconSprites:Icon_Windows_UI_CRB_Stalker",
+	[GameLib.CodeEnumClass.Spellslinger] 	= "IconSprites:Icon_Windows_UI_CRB_Spellslinger",
 }
 
 local kstrTooltipBodyColor      = "ffc0c0c0"
@@ -159,7 +159,7 @@ end
 -----------------------------------------------------------------------------------------------
 function SqUI_UF:OnLoad()
     -- load our form file
-	self.xmlDoc = XmlDoc.CreateFromFile("SquishyUI.xml")
+	self.xmlDoc = XmlDoc.CreateFromFile("SqUI_TargetFrame.xml")
 	self.xmlDoc:RegisterCallback("OnDocumentReady", self)
 	Apollo.LoadSprites("SqUI.xml")
 end
@@ -180,22 +180,22 @@ function SqUI_UF:OnDocumentReady()
 	Apollo.RegisterEventHandler("AlternateTargetUnitChanged", "OnAlternateTargetUnitChanged", self)
 	Apollo.RegisterEventHandler("VarChange_FrameCount", "OnFrame", self)
 	
-	self.luaSqUI_UF = SquishyUI:new()
-	self.luaSqUI_TF = SquishyUI:new()
-	self.luaSqUI_FF = SquishyUI:new()
+	self.luaSqUI_UF = SqUI_TargetFrame:new()
+	self.luaSqUI_TargetFrame = SqUI_TargetFrame:new()
+--	self.luaSqUI_FF = SqUI_TargetFrame:new()	--Focus target is a sub-bar on the Target Frame
 	
-	self.luaSqUI_FF:Init(self, 	{fScale=1.0, nConsoleVar="hud.focusTargetFrameDisplay", bDrawClusters=false})
-	self.luaSqUI_TF:Init(self, 	{fScale=1.0, bFlipped=true})
+--	self.luaSqUI_FF:Init(self, 	{fScale=1.0, nConsoleVar="hud.focusTargetFrameDisplay", bDrawClusters=false})
+	self.luaSqUI_TargetFrame:Init(self, 	{fScale=1.0, bFlipped=true})
 	self.luaSqUI_UF:Init(self, 	{fScale=1.0, nConsoleVar="hud.myUnitFrameDisplay", bDrawToT=false})
 	
 	-- setup default positions
-	self.luaSqUI_UF.locDefaultPosition = WindowLocation.new({fPoints = {0.25, 1, 0.25, 1}, nOffsets = {0,-324,400,-220}})
-	self.luaSqUI_TF.locDefaultPosition = WindowLocation.new({fPoints = {0.75, 1, 0.75, 1}, nOffsets = {-400,-324,0,-220}})
+	self.luaSqUI_UF.locDefaultPosition = WindowLocation.new({fPoints = {1, 1, 1, 1}, nOffsets = {0,0,0,0}})
+	self.luaSqUI_TargetFrame.locDefaultPosition = WindowLocation.new({fPoints = {0, 1, 0, 1}, nOffsets = {30,-454,430,-350}})
 --	self.luaSqUI_FF.locDefaultPosition = WindowLocation.new({fPoints = {0.75, 1, 0.75, 1}, nOffsets = {-400,-324,0,-220}})	
 	
-	self.luaSqUI_UF:SetPosition(self.luaUnitFrame.locDefaultPosition)
-	self.luaSqUI_TF:SetPosition(self.luaTargetFrame.locDefaultPosition)
---	self.luaSqUI_FF:SetPosition(self.luaFocusFrame.locDefaultPosition)
+	self.luaSqUI_UF:SetPosition(self.luaSqUI_UF.locDefaultPosition)
+	self.luaSqUI_TargetFrame:SetPosition(self.luaSqUI_TargetFrame.locDefaultPosition)
+--	self.luaSqUI_TargetFrame:SetPosition(self.luaSqUI_FF.locDefaultPosition)
 	
 	if GameLib.GetPlayerUnit() ~= nil then
 		self:OnCharacterLoaded()	
@@ -214,17 +214,17 @@ function SqUI_UF:OnCharacterLoaded()
 		local altPlayerTarget = unitPlayer:GetAlternateTarget()
 	
 		self.luaSqUI_UF:SetTarget(unitPlayer)
-		self.luaSqUI_TF:SetTarget(unitTarget)
-		self.luaSqUI_FF:SetTarget(altPlayerTarget)
+		self.luaSqUI_TargetFrame:SetTarget(unitTarget)
+--		self.luaSqUI_TargetFrame:FindChild("BottomCluster"):SetTarget(altPlayerTarget)
 	end
 end
 
 function SqUI_UF:OnTargetUnitChanged(unitTarget)
-	self.luaSqUI_TF:SetTarget(unitTarget)
+	self.luaSqUI_TargetFrame:SetTarget(unitTarget)
 end
 
 function SqUI_UF:OnAlternateTargetUnitChanged(unitTarget)
-	self.luaSqUI_FF:SetTarget(unitTarget)
+	self.luaSqUI_TargetFrame:FindChild("BottomCluster"):SetTarget(unitTarget)
 end
 
 function SqUI_UF:OnFocusSlashCommand()
@@ -235,11 +235,11 @@ end
 
 function SqUI_UF:OnWindowManagementReady()
 	Event_FireGenericEvent("WindowManagementAdd", {wnd = self.luaSqUI_UF.wndMainClusterFrame,		strName = Apollo.GetString("OptionsHUD_MyUnitFrameLabel")})
-	Event_FireGenericEvent("WindowManagementAdd", {wnd = self.luaSqUI_TF.wndMainClusterFrame,		strName = Apollo.GetString("OptionsHUD_TargetFrameLabel")})
-	Event_FireGenericEvent("WindowManagementAdd", {wnd = self.luaSqUI_FF.wndMainClusterFrame,	strName = Apollo.GetString("OptionsHUD_FocusTargetLabel")})
+	Event_FireGenericEvent("WindowManagementAdd", {wnd = self.luaSqUI_TargetFrame.wndMainClusterFrame,		strName = Apollo.GetString("OptionsHUD_TargetFrameLabel")})
+--	Event_FireGenericEvent("WindowManagementAdd", {wnd = self.luaSqUI_FF.wndMainClusterFrame,	strName = Apollo.GetString("OptionsHUD_FocusTargetLabel")})
 end
 
-function SqUI_TF:new(o)
+function SqUI_TargetFrame:new(o)
 	o = o or {}
 	setmetatable(o, self)
 	self.__index = self
@@ -247,7 +247,7 @@ function SqUI_TF:new(o)
 	return o
 end
 
-function SqUI_TF:Init(luaUnitFrameSystem, tParams)
+function SqUI_TargetFrame:Init(luaUnitFrameSystem, tParams)
 	Apollo.LinkAddon(luaUnitFrameSystem, self)
 	
 	self.luaUnitFrameSystem = luaUnitFrameSystem
@@ -260,10 +260,10 @@ function SqUI_TF:Init(luaUnitFrameSystem, tParams)
 		nConsoleVar		= tParams.nConsoleVar,
 		bDrawClusters 	= tParams.bDrawClusters == nil and true or tParams.bDrawClusters,
 		bDrawToT 		= tParams.bDrawToT == nil and true or tParams.bDrawToT,
-		bFlipped		= tParams.bFlipped == nil and true or tParams.bFlipped
+		bFlipped		= tParams.bFlipped == nil and false or tParams.bFlipped
 	}
 	
-	self.wndMainClusterFrame = Apollo.LoadForm(luaUnitFrameSystem.xmlDoc, tParams.bFlipped and "SqUI_PlayerFrame" or "SqUI_TargetFrame", "FixedHudStratumLow", self)
+	self.wndMainClusterFrame = Apollo.LoadForm(luaUnitFrameSystem.xmlDoc, tParams.bFlipped and "SqUI_TargetFrame" or "SqUI_PlayerFrame", "FixedHudStratumLow", self)
 --[[
 	self.arClusterFrames =
 	{
@@ -273,11 +273,11 @@ function SqUI_TF:Init(luaUnitFrameSystem, tParams)
 		Apollo.LoadForm(luaUnitFrameSystem.xmlDoc, "ClusterTargetMini", 	"FixedHudStratumLow", self),
 		Apollo.LoadForm(luaUnitFrameSystem.xmlDoc, "ClusterTargetMini", 	"FixedHudStratumLow", self)
 	}
-
-	self.arClusterFrames[1]:SetScale(self.tParams.fScale)
-	self.wndLargeFrame = self.arClusterFrames[1]:FindChild("LargeFrame")
+]]--
+	self.wndMainClusterFrame:SetScale(self.tParams.fScale)
+--	self.wndLargeFrame = self.arClusterFrames[1]:FindChild("LargeFrame")
 --	self:ArrangeClusterMembers()
-
+--[[
 	self.tPets = { }
 	self.wndPetFrame = self.arClusterFrames[1]:FindChild("PetContainerDespawnBtn")
 ]]--	
@@ -293,11 +293,7 @@ function SqUI_TF:Init(luaUnitFrameSystem, tParams)
 	self.wndSimpleFrame = Apollo.LoadForm(luaUnitFrameSystem.xmlDoc, "SimpleTargetFrame", "FixedHudStratum", self)
 	self.wndSimpleFrame:Show(false)
 ]]--
-	self.nLFrameLeft, self.nLFrameTop, self.nLFrameRight, self.nLFrameBottom = self.wndMainClusterFrame:GetAnchorOffsets()
-	self.arShieldPos = self.wndMainClusterFrame:FindChild("Shield"):GetLocation()
---	self.arAbsorbPos = self.wndLargeFrame:FindChild("MaxAbsorb"):GetLocation()
 
-	-- We apparently resize bars rather than set progress
 	self:SetBarValue(self.wndMainClusterFrame:FindChild("ShieldProgressBar"), 0, 100, 100)
 
 	self.strPathActionKeybind = GameLib.GetKeyBinding("PathAction")
@@ -319,7 +315,7 @@ function SqUI_TF:Init(luaUnitFrameSystem, tParams)
 	self.bTargetDead = false
 end
 
-function SqUI_TF:OnUpdate()
+function SqUI_TargetFrame:OnUpdate()
   local bTargetChanged = false
   local unitTarget = self.unitTarget
   local unitPlayer = GameLib.GetPlayerUnit()
@@ -356,8 +352,8 @@ function SqUI_TF:OnUpdate()
 ]]--
     --Make the unit a cluster of a vehicle if they're in one.
     if unitTarget:IsInVehicle() then
-      local uPlayer = unitTarget
-      unitTarget = uPlayer:GetVehicle()
+		local uPlayer = unitTarget
+		unitTarget = uPlayer:GetVehicle()
 
 --      table.insert(tCluster, uPlayer)
     end
@@ -401,7 +397,7 @@ function SqUI_TF:OnUpdate()
   else
     bShowWindow = false
 --    self.wndSimpleFrame:Show(false)
-    self:HideClusterFrames()
+--    self:HideClusterFrames()
   end
 
   if bShowWindow and self.tParams.nConsoleVar ~= nil then
@@ -422,21 +418,21 @@ function SqUI_TF:OnUpdate()
       bShowWindow = true
     end
   end
-
+--[[
   if bShowWindow and tCluster ~= nil and #tCluster > 0 then
     self:UpdateClusterFrame(tCluster)
   else
     self:HideClusterFrames()
   end
-
+]]--
   self.wndMainClusterFrame:Show(bShowWindow)
 end
 
-function SqUI_TF:GetPosition()
+function SqUI_TargetFrame:GetPosition()
   return self.wndMainClusterFrame:GetLocation()
 end
 
-function SqUI_TF:SetPosition(locNewLocation)
+function SqUI_TargetFrame:SetPosition(locNewLocation)
   if locNewLocation == nil then
     return
   end
@@ -444,13 +440,13 @@ function SqUI_TF:SetPosition(locNewLocation)
   self.wndMainClusterFrame:MoveToLocation(locNewLocation)
 end
 
-function SqUI_TF:SetTarget(unitTarget)
+function SqUI_TargetFrame:SetTarget(unitTarget)
   self.unitTarget = unitTarget
   self:OnUpdate()
 end
 
 -- todo: remove this, move functionality to draw or previous function, look about unhooking for movement
-function SqUI_TF:UpdatePrimaryFrame(unitTarget, bTargetChanged) --called from the onFrame; eliteness is frame, diff is rank
+function SqUI_TargetFrame:UpdatePrimaryFrame(unitTarget, bTargetChanged) --called from the onFrame; eliteness is frame, diff is rank
 --  self.wndSimpleFrame:Show(false)
   if unitTarget == nil then
     return
@@ -499,7 +495,7 @@ function SqUI_TF:UpdatePrimaryFrame(unitTarget, bTargetChanged) --called from th
 end
 
 
-function SqUI_TF:UpdateAlternateFrame(unitToT)
+function SqUI_TargetFrame:UpdateAlternateFrame(unitToT)
   if unitToT == nil then
     return
   end
@@ -585,6 +581,7 @@ function SqUI_TF:UpdateAlternateFrame(unitToT)
   -- Bars
 --  wndFrame:FindChild("ShieldProgressBar"):Show(nHealthCurr > 0)
   wndFrame:FindChild("BottomCluster"):Show(nHealthCurr > 0)
+  self:SetBarValue(wndFrame:FindChild("BottomClusterProgressBar"), 0, nHealthCurr, nHealthMax)
 --  wndFrame:FindChild("Shield"):Show(nHealthCurr > 0 and nShieldMax > 0)
 --  wndFrame:FindChild("MaxAbsorb"):Show(nHealthCurr > 0 and nAbsorbMax > 0)
 --[[
@@ -642,7 +639,7 @@ function SqUI_TF:UpdateAlternateFrame(unitToT)
 end
 
 
-function SqUI_TF:UpdateToTFrame(unitToT) -- called on frame
+function SqUI_TargetFrame:UpdateToTFrame(unitToT) -- called on frame
   if unitToT == nil then
     return
   end
@@ -667,10 +664,28 @@ function SqUI_TF:UpdateToTFrame(unitToT) -- called on frame
   end
 
   self.wndToTFrame:SetData(unitToT)
+  
+   -- Set up ToT health bar
+  local wndHealth = self.wndToTFrame:FindChild("TopClusterProgressBar")
+  local nHealthCurr = unitToT:GetHealth()
+  local nHealthMax = unitToT:GetMaxHealth()
+  
+  self:SetBarValue(wndHealth, 0, nHealthCurr, nHealthMax)
+  
+  if nVulnerabilityTime and nVulnerabilityTime > 0 then
+    wndHealth:SetBarColor(tColors.lightPurple)	
+  elseif nHealthCurr / nHealthMax < knHealthRed then
+    wndHealth:SetBarColor(tColors.red)
+  elseif  nHealthCurr / nHealthMax < knHealthYellow then
+    wndHealth:SetBarColor(tColors.yellow)
+  else
+    wndHealth:SetBarColor(tColors.green)
+  end
+
 --  self.wndToTFrame:FindChild("TargetModel"):SetCostume(unitToT)
 end
---[[ Funciton not needed unless mini-cluster frames are implemented
-function SqUI_TF:UpdateClusterFrame(tCluster) -- called on frame
+--[[ Functions not needed unless mini-cluster frames are implemented
+function SqUI_TargetFrame:UpdateClusterFrame(tCluster) -- called on frame
   if self.unitTarget:IsDead() then
     self:HideClusterFrames()
     return
@@ -774,7 +789,7 @@ function SquishyUI:HideClusterFrames()
   end
 end
 ]]--
-function SqUI_TF:SetTargetForFrame(wndFrame, unitTarget, bTargetChanged)
+function SqUI_TargetFrame:SetTargetForFrame(wndFrame, unitTarget, bTargetChanged)
   wndFrame:SetData(unitTarget)
   self:SetTargetHealthAndShields(wndFrame, unitTarget)
 
@@ -808,8 +823,8 @@ function SqUI_TF:SetTargetForFrame(wndFrame, unitTarget, bTargetChanged)
       strClassIconSprite = "spr_TargetFrame_ClassIcon_Fodder"
     end
 
---    wndFrame:FindChild("PlayerClassIcon"):SetSprite(strPlayerIconSprite)
-    wndFrame:FindChild("TargetClassIcon"):SetSprite(strClassIconSprite)
+    wndFrame:FindChild("ClassIcon"):SetSprite(strPlayerIconSprite)
+    wndFrame:FindChild("ClassIcon"):SetSprite(strClassIconSprite)
 
     --Disposition/flags
     local strFlipped = self.tParams.bFlipped and "Flipped" or ""
@@ -817,7 +832,7 @@ function SqUI_TF:SetTargetForFrame(wndFrame, unitTarget, bTargetChanged)
     local strDisposition = "Friendly"
     local strAttachment = ""
 
-    wndFrame:FindChild("TargetName"):SetTextColor(karDispositionColors[eDisposition])
+    wndFrame:FindChild("Name"):SetTextColor(karDispositionColors[eDisposition])
 
     if eDisposition == Unit.CodeEnumDisposition.Hostile then
       strDisposition = "Hostile"
@@ -902,7 +917,7 @@ function SqUI_TF:SetTargetForFrame(wndFrame, unitTarget, bTargetChanged)
         if unitTarget ~= GameLib.GetPlayerUnit() then
           strRewardFormatted = String_GetWeaselString(Apollo.GetString("TargetFrame_TargetXPReward"), karConInfo[nCon][4])
           local strLevelTooltip = self:HelperBuildTooltip(strRewardFormatted, karConInfo[nCon][3], karConInfo[nCon][5])
-          wndFrame:FindChild("Level"):FindChild("TargetLevel"):SetTooltip(strLevelTooltip)
+          wndFrame:FindChild("Level"):FindChild("Level"):SetTooltip(strLevelTooltip)
         end
       end
     end
@@ -966,7 +981,7 @@ function SqUI_TF:SetTargetForFrame(wndFrame, unitTarget, bTargetChanged)
   self:UpdateCastingBar(wndFrame, unitTarget)
 end
 
-function SquishyUI:SetTargetForClusterFrame(wndFrame, unitTarget, bTargetChanged) -- this is the update; we can split here
+function SqUI_TargetFrame:SetTargetForClusterFrame(wndFrame, unitTarget, bTargetChanged) -- this is the update; we can split here
   wndFrame:SetData(unitTarget)
 
   local eRank = unitTarget:GetRank()
@@ -1008,7 +1023,7 @@ function SquishyUI:SetTargetForClusterFrame(wndFrame, unitTarget, bTargetChanged
   self:UpdateCastingBar(wndFrame, unitTarget)
 end
 
-function SqUI_TF:UpdateCastingBar(wndFrame, unitCaster)
+function SqUI_TargetFrame:UpdateCastingBar(wndFrame, unitCaster)
   -- Casting Bar Update
 
   local bShowCasting = false
@@ -1088,14 +1103,14 @@ end
 
 -------------------------------------------------------------------------------
 --[[ Not using mini-cluster frames, so this is unnecessary
-function SqUI_TF:ArrangeClusterMembers()
+function SqUI_TargetFrame:ArrangeClusterMembers()
   local nFrameLeft, nFrameTop, nFrameRight, nFrameBottom = self.arClusterFrames[1]:GetRect()
 
   if self.nFrameLeft == nil or nFrameLeft ~= self.nFrameLeft or nFrameTop ~= self.nFrameTop then -- if the frame has been moved since we last drew
     -- set new variables
     self.nFrameLeft = nFrameLeft
     self.nFrameTop = nFrameTop
-    self.nFrameRight = nFrameRight
+    self.nFrameRight = nFrameRight 
     self.nFrameBottom = nFrameBottom
 
     if self.tParams.bFlipped then
@@ -1112,7 +1127,7 @@ function SqUI_TF:ArrangeClusterMembers()
   end
 end
 ]]--
-function SqUI_TF:HelperBuildTooltip(strBody, strTitle, crTitleColor)
+function SqUI_TargetFrame:HelperBuildTooltip(strBody, strTitle, crTitleColor)
   if strBody == nil then return end
   local strTooltip = string.format("<T Font=\"CRB_InterfaceMedium\" TextColor=\"%s\">%s</T>", kstrTooltipBodyColor, strBody)
   if strTitle ~= nil then -- if a title has been passed, add it (optional)
@@ -1123,7 +1138,7 @@ function SqUI_TF:HelperBuildTooltip(strBody, strTitle, crTitleColor)
   return strTooltip
 end
 
-function SqUI_TF:HelperCalculateConValue(unitTarget)
+function SqUI_TargetFrame:HelperCalculateConValue(unitTarget)
   local nUnitCon = GameLib.GetPlayerUnit():GetLevelDifferential(unitTarget)
   local nCon = 1 --default setting
 
@@ -1142,13 +1157,13 @@ function SqUI_TF:HelperCalculateConValue(unitTarget)
   return nCon
 end
 
-function SqUI_TF:HelperResetTooltips()
+function SqUI_TargetFrame:HelperResetTooltips()
 --  self.wndLargeFrame:FindChild("TargetModel"):SetTooltip("")
   self.wndMainClusterFrame:FindChild("Level"):SetTooltip("")
   self.wndMainClusterFrame:FindChild("GroupMark"):SetTooltip("")
 end
 
-function SqUI_TF:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
+function SqUI_TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
   if not unitTarget or unitTarget:GetHealth() == nil then
     return
   end
@@ -1173,9 +1188,9 @@ function SqUI_TF:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 
   local strFlipped = self.tParams.bFlipped and "Flipped" or ""
   local wndHealth =  self.wndMainClusterFrame:FindChild("HealthProgressBar")
+  
   if unitTarget:IsInCCState(Unit.CodeEnumCCState.Vulnerability) then
     wndHealth:SetBarColor(tColors.lightPurple)
-
   elseif nHealthCurr / nHealthMax <= knHealthRed then
     wndHealth:SetBarColor(tColors.red)
   elseif nHealthCurr / nHealthMax <= knHealthYellow then
@@ -1187,7 +1202,7 @@ function SqUI_TF:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
   wndHealth:SetStyleEx("EdgeGlow", nHealthCurr / nHealthMax < 0.96)
 
   -- Resize
-  self:SetBarValue(self.wndMainClusterFrame:FindChild("ShieldProgressBar"), 0, nShieldCurr, nShieldMax) -- Only the Curr Shield really progress fills
+--  self:SetBarValue(self.wndMainClusterFrame:FindChild("ShieldProgressBar"), 0, nShieldCurr, nShieldMax) -- Only the Curr Shield really progress fills
 --  self:SetBarValue(self.wndLargeFrame:FindChild("AbsorbCapacityTint"), 0, nAbsorbCurr, nAbsorbMax)
 
   -- Bars
@@ -1273,7 +1288,7 @@ function SqUI_TF:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 end
 
 
-function SqUI_TF:HelperFormatBigNumber(nArg)
+function SqUI_TargetFrame:HelperFormatBigNumber(nArg)
   if nArg < 1000 then
     strResult = tostring(nArg)
   elseif nArg < 1000000 then
@@ -1300,20 +1315,20 @@ function SqUI_TF:HelperFormatBigNumber(nArg)
   return strResult
 end
 
-function SqUI_TF:SetBarValue(wndBar, fMin, fValue, fMax)
+function SqUI_TargetFrame:SetBarValue(wndBar, fMin, fValue, fMax)
   wndBar:SetMax(fMax)
   wndBar:SetFloor(fMin)
   wndBar:SetProgress(fValue)
 end
 
-function SqUI_TF:OnGenerateBuffTooltip(wndHandler, wndControl, tType, splBuff)
+function SqUI_TargetFrame:OnGenerateBuffTooltip(wndHandler, wndControl, tType, splBuff)
   if wndHandler == wndControl then
     return
   end
   Tooltip.GetBuffTooltipForm(self, wndControl, splBuff, {bFutureSpell = false})
 end
 
-function SqUI_TF:OnMouseButtonDown(wndHandler, wndControl, eMouseButton, x, y)
+function SqUI_TargetFrame:OnMouseButtonDown(wndHandler, wndControl, eMouseButton, x, y)
   local unitToT = wndHandler:GetData()
   if eMouseButton == GameLib.CodeEnumInputMouse.Left and unitToT ~= nil then
     GameLib.SetTargetUnit(unitToT)
@@ -1331,7 +1346,7 @@ function SqUI_TF:OnMouseButtonDown(wndHandler, wndControl, eMouseButton, x, y)
   return false
 end
 
-function SqUI_TF:OnQueryDragDrop(wndHandler, wndControl, nX, nY, wndSource, strType, nValue)
+function SqUI_TargetFrame:OnQueryDragDrop(wndHandler, wndControl, nX, nY, wndSource, strType, nValue)
   if wndHandler ~= wndControl then
     return Apollo.DragDropQueryResult.PassOn
   end
@@ -1346,7 +1361,7 @@ function SqUI_TF:OnQueryDragDrop(wndHandler, wndControl, nX, nY, wndSource, strT
   return Apollo.DragDropQueryResult.Invalid
 end
 
-function SqUI_TF:OnDragDrop(wndHandler, wndControl, nX, nY, wndSource, strType, nValue)
+function SqUI_TargetFrame:OnDragDrop(wndHandler, wndControl, nX, nY, wndSource, strType, nValue)
   if wndHandler ~= wndControl then
     return false
   end
@@ -1361,7 +1376,7 @@ function SqUI_TF:OnDragDrop(wndHandler, wndControl, nX, nY, wndSource, strType, 
   end
 end
 
-function SqUI_TF:OnKeyBindingUpdated(strKeybind)
+function SqUI_TargetFrame:OnKeyBindingUpdated(strKeybind)
   if strKeybind ~= "Path Action" and strKeybind ~= "Cast Objective Ability" then
     return
   end
@@ -1379,7 +1394,7 @@ function SqUI_TF:OnKeyBindingUpdated(strKeybind)
   end
 end
 
-function SqUI_TF:OnTutorial_RequestUIAnchor(eAnchor, idTutorial, strPopupText)
+function SqUI_TargetFrame:OnTutorial_RequestUIAnchor(eAnchor, idTutorial, strPopupText)
   if eAnchor == GameLib.CodeEnumTutorialAnchor.BuffFrame then
     local tRect = {}
     tRect.l, tRect.b, tRect.r, tRect.t = self.wndMainClusterFrame:FindChild("BottomCluster"):GetRect() --Testing: order should be l, t, r, b by default
